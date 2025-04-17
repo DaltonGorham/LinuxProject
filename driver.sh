@@ -32,9 +32,10 @@ echo "Unzipped ${transaction_file} successfully."
 # remove the .bz2 extension from the file name
 transaction_file="${transaction_file%.bz2}"
 
-echo "Removing header from ${transaction_file}..."
+echo "Removing header and converting all text to lowercase in ${transaction_file}..."
 
-# remove the header from the transaction_file
-sed '1d' "$transaction_file" > cleaned_"$transaction_file"
-check_exit_status "Failed to remove header from ${transaction_file}."
-echo "Header removed from ${transaction_file} successfully."
+# remove the header from the transaction_file and convert all text to lowercase
+sed '1d' "$transaction_file" | tr '[A-Z]' '[a-z]' > cleaned_"$transaction_file"
+check_exit_status "Failed to reformat ${transaction_file}."
+echo "Removed header and translated all text to lowercase for ${transaction_file} successfully."
+echo "Created new formatted file: cleaned_${transaction_file}"

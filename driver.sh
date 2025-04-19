@@ -39,3 +39,10 @@ sed '1d' "$transaction_file" | tr '[A-Z]' '[a-z]' > cleaned_"$transaction_file"
 check_exit_status "Failed to reformat ${transaction_file}."
 echo "Removed header and translated all text to lowercase for ${transaction_file} successfully."
 echo "Created new formatted file: cleaned_${transaction_file}"
+
+cleaned_transaction_file="cleaned_${transaction_file}"
+
+# convert the "gender" field to use "f" and "m" or "u"
+echo "Converting gender field in ${cleaned_transaction_file}..."
+convert_gender_field "${cleaned_transaction_file}" 5
+check_exit_status "Failed to convert the gender field in ${cleaned_transaction_file}."

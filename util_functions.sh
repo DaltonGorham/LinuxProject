@@ -72,7 +72,7 @@ function convert_gender_field() {
         else if (gender == "0" || gender == "male")
             $field = "m"
         else if (gender == "f" || gender == "m")
-            $field = val
+            $field = gender
         else
             $field = "u"
 

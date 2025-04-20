@@ -65,15 +65,19 @@ echo "Successfully sorted ${cleaned_transaction_file} by customer ID."
 echo "Removing ${cleaned_transaction_file} and placing sorted records in transaction.csv..."
 rm "${cleaned_transaction_file}"
 
+# generate the summary file
 echo "Generating summary file..."
 generate_summary_file "transaction.csv"
 
+# generate the transaction report
 echo "Generating Transaction Report..."
 generate_transaction_report "transaction.csv"
 
+# generate the purchase report
 echo "Generating Purchase Report..."
 generate_purchase_report "transaction.csv"
 
+exit 0
 
 
 

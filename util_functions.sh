@@ -244,6 +244,9 @@ function generate_summary_file() {
 
     check_exit_status "Failed to generate summary file from $input_file."
 
+
+    # sort the summary file 
+    echo "Sorting summary file..."
     sort_summary_file "temp_summary_file.csv"
     check_exit_status "Failed to sort summary file from $input_file."
 

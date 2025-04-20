@@ -58,9 +58,20 @@ remove_dollar_sign "${cleaned_transaction_file}" 6
 
 # sort the cleaned file by customer ID and place it in the final transaction.csv file
 echo "Sorting ${cleaned_transaction_file} by customer ID..."
-sort -n -k 1,1 "${cleaned_transaction_file}" > "transaction.csv"
+sort -t ',' -n -k 1,1 "${cleaned_transaction_file}" > "transaction.csv"
 check_exit_status "Failed to sort ${cleaned_transaction_file}."
 echo "Successfully sorted ${cleaned_transaction_file} by customer ID."
 echo "Removing ${cleaned_transaction_file} and placing sorted records in transaction.csv..."
 rm "${cleaned_transaction_file}"
+
+echo "Generating summary file..."
+generate_summary_file "transaction.csv"
+
+echo "Generating transaction report..."
+generate_transaction_report "transaction.csv"
+
+
+
+
+
 

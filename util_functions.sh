@@ -276,15 +276,73 @@ function generate_transaction_report() {
     echo "Successfully generated transaction report from $input_file."
 }
 
+function generate_purchase_report() {
+    local input_file=$1
+
+    # use awk here ecause cut does not support grouping by multiple fields
+    
+    awk -F ',' '
+    BEGIN {
+        OFS = ","
+    }
+    {
+        # use toupper function to convert into uppercase
+        state = toupper($12)
+        gender = toupper($5)
+        purchase_amount = $6 + 0 # convert to number to avoid using as string
+       
+       # to associate the state and gender with the purchase amount, we need to create a key 
+       # then we can use the key to group the purchase amounts
+       # this is mimicking a hash table
+       key = state "-" gender
+       total[key] += purchase_amount
+
+
+    }
+    END {
+        # now we can break the key into its components and print the results
+        for (key in total) {
+            split(key, parts, "-")
+            printf "%s,%s,%.2f\n", parts[1], parts[2], total[key]
+        }
+        }' "$input_file" > "purchase_tmp.rpt" 
+
+        sort -t ',' -k 3,3nr -k1,1 -k2,2 "purchase_tmp.rpt" > "purchase_tmp_sorted.rpt"
+
+    check_exit_status "Failed to generate tmp purchase report from $input_file."
+
+    # use awk again to actually format the output
+    awk -F ',' '
+    BEGIN {
+        OFS = ","
+        print "Report by: Dalton Gorham"
+        print "Purchase Summary Report"
+        print ""
+        printf "%-10s %-10s %-10s\n", "State", "Gender", "Report"
+        }
+
+        # print the report body
+        {
+            printf "%-10s %-10s %-10.2f\n", $1, $2, $3 
+        }' "purchase_tmp_sorted.rpt" > "purchase.rpt"
+
+    check_exit_status "Failed to generate purchase report from $input_file."
+    echo "Successfully generated purchase report from $input_file."
+    rm "purchase_tmp.rpt"
+    rm "purchase_tmp_sorted.rpt"
+
+}
+
+
 function sort_summary_file() {
     local input_file=$1
 
+   # Sort the summary file based upon
+   # 1. state
+   # 2. zip (descending)
+   # 3. last name
+   # 4. first name
     sort -t ',' -k 2,2 -k 3,3nr -k 4,4 -k 5,5 "$input_file" > "summary.csv"
     check_exit_status "Failed to sort summary file $input_file."
 }
-
-
-function get_os() {
-    local os=$(uname)
-    echo "$os"
-}
+    

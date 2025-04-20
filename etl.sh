@@ -1,5 +1,9 @@
 #!/bin/bash
-source util_functions.sh
+source util_functions.sh # source the utility functions for error checking and other utilities
+
+# Name: Dalton Gorham
+# Date: 04/19/2025
+# Assignment: Semester Project ETL
 
 
 # The script takes three arguments:
@@ -10,9 +14,6 @@ source util_functions.sh
 remote_server=$1
 remote_userid=$2
 remote_file=$3
-
-# grab the users operating system for sed command
-os=$(get_os)
 
 # Check if the correct number of arguments is provided
 check_arguments "$#"
@@ -67,10 +68,11 @@ rm "${cleaned_transaction_file}"
 echo "Generating summary file..."
 generate_summary_file "transaction.csv"
 
-echo "Generating transaction report..."
+echo "Generating Transaction Report..."
 generate_transaction_report "transaction.csv"
 
-
+echo "Generating Purchase Report..."
+generate_purchase_report "transaction.csv"
 
 
 
